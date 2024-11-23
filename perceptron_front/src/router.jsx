@@ -6,7 +6,7 @@ function Router(){
   return (
       <Routes>
         <Route path={"/"} element={<Inicial/>}/>
-       
+        <Route path={"/"} element={<Inicial/>}/>
       </Routes>
   )
 }

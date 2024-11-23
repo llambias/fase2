@@ -12,7 +12,7 @@ function App() {
 
   const fetchTasks= async () => {
     try {
-      const response = await axios.get("https://api.escuelajs.co/api/v1/products");
+      const response = await axios.get("URL_BACK"+ "/all");
       setTasks(response.data);
       console.log([response.data]);
       console.log("hola mundo");
@@ -30,11 +30,15 @@ function App() {
     <body>
     {tasks.map((task) => {
       return(
-        <>
-        <h1>{task.title}</h1>
-        <h2>{task.status}</h2>
-        </>
-        
+        <div class="tarjeta">
+          <div class="card">{task.name}</div>
+          <div class="cuerpo">
+              {task.name}
+          </div>
+          <div class="pie">
+                <a href="#">Más información</a>
+          </div>
+        </div>
       )
       }
     )}

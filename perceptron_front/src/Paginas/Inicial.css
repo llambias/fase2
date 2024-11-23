@@ -15,7 +15,7 @@
     filter: drop-shadow(0 0 2em #646cffaa);
   }
   .logo.react:hover {
-    filter: drop-shadow(0 0 2em #61dafbaa);
+    filter: drop-shadow(0 0 2em #51dafaaa);
   }
   
   
@@ -26,9 +26,29 @@
   }
   
   .card {
-    padding: 2em;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    width:420px;
+    border: 1px solid lightgray;
+    box-shadow: 2px 2px 8px 4px #d3d3d3d1;
+    border-radius:15px;
+    font-family: sans-serif;
   }
-  
+  .titulo{
+    font-size: 24px;
+    padding: 10px 10px 0 10px;;
+}
+.cuerpo{
+    padding: 10px;
+   }
+
+.pie{
+    background: #6699ff;
+    border-radius:0 0 15px 15px;
+    padding: 10px;
+    text-align:center;
+}
   .read-the-docs {
     color: #888;
   }
