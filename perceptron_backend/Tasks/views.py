@@ -4,29 +4,32 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.core import serializers
 from django.http import Http404, HttpResponseNotAllowed
+from django.views.decorators.csrf import csrf_exempt
 from .models import Tasks, Epic
 import json
 
 
 ## Tasks
 # create
-
+@csrf_exempt
 def create_a_new_task(request):
     if request.method == 'POST':
+        print('-------------------a')
         body = json.loads(request.body.decode('utf-8'))
-        new_title = body.get("title")
-        new_status = body.get("status")
-        new_completed = body.get("completed")
-       
+        print(body)
         try:
-             epic = Epic.objects.get(pk=body.get("epic_id"))
-        except Epic.DoesNotExist:
-             raise Http404("epic does not exist")
-        new_task = Tasks(name=new_title, address=new_status, 
-                               latitude=new_completed)
+            
+            new_title = body.get("titulo")
+            new_status = body.get("status")
+            new_completed = body.get("completed")
+            
+        except KeyError:
+            raise HttpResponse(status=204)
+        
+        new_task = Tasks(titulo=new_title, status =new_status, 
+                               completed=new_completed)
         new_task.save()
-        epic.tasks.add(new_task)
-        epic.save()
+        
         return HttpResponse(status=200)
     else:
         raise HttpResponseNotAllowed("Method is not supported")
@@ -47,25 +50,18 @@ def get_task_by_id(request, task_id):
 def update_task_by_id(request, task_id):
     if request.method == 'PUT':
         body = json.loads(request.body.decode('utf-8'))
-        new_name = body.get("name")
-        new_address = body.get("address")
-        new_latitude = body.get("latitude")
-        new_longitude = body.get("longitude")
-        try:
-            epic = Epic.objects.get(pk=body.get("epic_id"))
-        except Epic.DoesNotExist:
-            raise Http404("Tag does not exist")
+        new_title = body.get("titulo")
+        new_status = body.get("status")
+        new_completed = body.get("completed")
         try:
             task = Tasks.objects.get(pk=task_id)
         except Tasks.DoesNotExist:
             raise Http404("task does not exist")
-        task.name = new_name
-        task.address = new_address
-        task.latitude = new_latitude
-        task.longitude = new_longitude
+        task.titulo=new_title
+        task.status =new_status
+        task.completed=new_completed
         task.save()
-        epic.tasks.add(task)
-        epic.save()
+        
         return HttpResponse(status=200)
     else:
         raise HttpResponseNotAllowed("Method is not supported")
@@ -91,11 +87,8 @@ def create_a_new_epic(request):
         new_name = body.get("epic")
         
        
-        try:
-             epic = Epic.objects.get(pk=body.get("task_id"))
-        except Epic.DoesNotExist:
-             raise Http404("task does not exist")
-        new_epic = Tasks(name=new_name )
+        epic = Epic(name=new_name)
+        
         new_name.save()
         epic.tasks.add(new_name)
         epic.save()
@@ -104,9 +97,10 @@ def create_a_new_epic(request):
         raise HttpResponseNotAllowed("Method is not supported")
 #read
 def get_all_epics(request):
-    query_set = Epic.objects.all()
-    data = serializers.serialize("json", query_set)
-    return HttpResponse(data)
+    if request.method == 'GET':
+        query_set = Epic.objects.all()
+        data = serializers.serialize("json", query_set)
+        return HttpResponse(data)
 
 def get_epic_by_id(request, task_id):
     try:
